@@ -1,0 +1,6 @@
+pidoc
+*.pyc
+build
+dist
+rpcudp.egg-info
+

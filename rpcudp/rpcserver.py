@@ -39,9 +39,9 @@ class RPCServer(object):
             txdata = msgid + msgpack.packb(result)
             sock.sendto(txdata, dest)
 
-    def run(self):
+    def run(self, bindaddr):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind(('0.0.0.0', 8080))
+        sock.bind(bindaddr)
         while True:
             recvData, source = sock.recvfrom(1024)
             eventlet.spawn_n(self.call_dispatch, recvData, source, sock)

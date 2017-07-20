@@ -24,7 +24,7 @@ def rpccall(func):
     return _rpccall
 
 
-class RPCServer():
+class RPCServer(object):
     def __init__(self):
         pool = eventlet.GreenPool()
         self.pile = eventlet.GreenPile(pool)

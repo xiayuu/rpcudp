@@ -20,7 +20,7 @@ def rpccall(func):
         result, _ = self.pile.next()
         c.close()
         if msgid == result[0:20]:
-            return msgpack.unpackb(result[20:], encoding='utf-8')
+            return msgpack.unpackb(result[20:], encoding='utf-8', use_list=False)
     return _rpccall
 
 
@@ -31,7 +31,7 @@ class RPCServer(object):
 
     def call_dispatch(self, datagram, dest, sock):
         msgid = datagram[0:20]
-        data = msgpack.unpackb(datagram[20:], encoding='utf-8')
+        data = msgpack.unpackb(datagram[20:], encoding='utf-8', use_list=False)
         funcname, args, kw = data
         f = getattr(self, "rpc_%s" % funcname, None)
         if f is not None and callable(f):

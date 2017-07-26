@@ -8,7 +8,16 @@ class Testserver(RPCServer):
     def ping(self, dest, i, j=0):
         pass
 
+    @rpccall
+    def pong(self, dest):
+        pass
+
+    def rpc_pong(self):
+        print("call pong")
+        return True
+
     def rpc_ping(self, i, j=0):
+        self.pong()
         return "Pong"+str(i+j)
 
 
@@ -16,5 +25,5 @@ server = Testserver()
 i = 0
 while True:
     i=i+1
-    result = server.ping(('127.0.0.1', 8080), i, j=20)
+    result = server.ping(('127.0.0.1', 1001), i, j=20)
     print(result)

@@ -11,5 +11,5 @@ setup(
     license="APACHE",
     url="",
     packages=find_packages(),
-    requires=['eventlet'],
-    install_requires=['eventlet'])
+    requires=[],
+    install_requires=[])

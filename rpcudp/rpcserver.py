@@ -12,7 +12,8 @@ def rpccall(func):
         def _udpcall(conn, data, dest):
             conn.sendto(data, dest)
             self.debug("data send to dest")
-            return conn.recvfrom(1024)
+            with eventlet.Timeout(3, True):
+                return conn.recvfrom(1024)
 
         self.debug("rpccall function %s" % func.__name__)
         self.debug("rpccall dest: %s:%d" % dest)

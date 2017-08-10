@@ -13,7 +13,7 @@ def rpccall(func):
             conn.sendto(data, dest)
             self.debug("data send to dest")
             with eventlet.Timeout(3, True):
-                return conn.recvfrom(1024)
+                return conn.recvfrom(65500)
 
         self.debug("rpccall function %s" % func.__name__)
         self.debug("rpccall dest: %s:%d" % dest)
@@ -28,6 +28,30 @@ def rpccall(func):
             return msgpack.unpackb(result[20:], encoding='utf-8', use_list=False)
     return _rpccall
 
+def rpccall_n(timeout=3):
+    def decorator(func):
+        def _rpccall_n(self, destlist, *args, **kw):
+            def _udpcall(dest):
+                msgid = sha1(os.urandom(32)).digest()
+                c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                data = msgid + msgpack.packb([func.__name__, args, kw])
+                c.sendto(data, dest)
+                res = None
+                with eventlet.Timeout(timeout, False):
+                    res, _ = c.recvfrom(65500)
+                    if msgid != res[0:20]:
+                        res = None
+                    else:
+                        res = msgpack.unpackb(res[20:],
+                                              encoding='utf-8',
+                                              use_list=False)
+                c.close()
+                return (res, dest)
+            for dest in destlist:
+                self.pile.spawn(_udpcall, dest)
+            return self.pile
+        return _rpccall_n
+    return decorator
 
 class RPCServer(object):
     def __init__(self, DEBUG=False):

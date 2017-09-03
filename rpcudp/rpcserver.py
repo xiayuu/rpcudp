@@ -46,7 +46,7 @@ def rpccall_n(timeout=3):
                                               encoding='utf-8',
                                               use_list=False)
                 c.close()
-                return res
+                return (res, dest)
             for dest in destlist:
                 self.pile.spawn(_udpcall, dest)
             return self.pile

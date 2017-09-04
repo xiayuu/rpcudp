@@ -15,9 +15,10 @@ def rpccall(func):
                 self.debug("data send to dest")
                 with eventlet.Timeout(3, True):
                     return conn.recvfrom(65500)
-            except Exception:
+            except Exception,e:
                 self.debug("rpc Exception")
-                return ""
+                print(str(e))
+                return ("", None)
 
         self.debug("rpccall function %s" % func.__name__)
         msgid = sha1(os.urandom(32)).digest()

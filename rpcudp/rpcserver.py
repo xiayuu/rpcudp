@@ -20,7 +20,6 @@ def rpccall(func):
                 return ""
 
         self.debug("rpccall function %s" % func.__name__)
-        self.debug("rpccall dest: %s:%d" % dest)
         msgid = sha1(os.urandom(32)).digest()
         c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         data = msgid + msgpack.packb([func.__name__, args, kw])

@@ -17,9 +17,8 @@ class Testserver(RPCServer):
         return True
 
     def rpc_ping(self, i, j=0):
-        self.pong(('localhost', 1001))
         return "Pong"+str(i+j)
 
 
-server = Testserver()
-server.run(('localhost', 1001))
+server = Testserver(DEBUG=True)
+server.run(('192.168.1.4', 1001))

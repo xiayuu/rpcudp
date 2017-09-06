@@ -27,7 +27,7 @@ def rpccall(func):
         msgid = sha1(os.urandom(32)).digest()
         data = msgid + msgpack.packb([func.__name__, args, kw])
         result = eventlet.spawn(_udpcall, data, dest).wait()
-        self.debug("%s:c:return:%s:%s" % (func.__name__, str(result), str(dest)))
+        self.debug("%s:c:return:%s:%s" % (func.__name__, str(result[20:]), str(dest)))
         if msgid == result[0:20]:
             return msgpack.unpackb(result[20:], encoding='utf-8', use_list=False)
 
@@ -45,7 +45,7 @@ def rpccall_n(timeout=3):
                     res = None
                     with eventlet.Timeout(timeout, False):
                         res, source = c.recvfrom(65500)
-                        self.debug("%s:c:return:%s:%s" % (func.__name__, str(res), str(source)))
+                        self.debug("%s:c:return:%s:%s" % (func.__name__, str(res[20:]), str(source)))
                         if msgid != res[0:20]:
                             res = None
                         else:
